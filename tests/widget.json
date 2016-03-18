@@ -48,6 +48,16 @@
 	    {"name" : "TextScreenTest"}
 	]
     },
+    "CanvasTest" : {
+	"<type>" : "canvas",
+	"composants" : {
+	    "id" : 1,
+	    "x" : 0,
+	    "y" : 0,
+	    "h" : 1000,
+	    "w" : 1000
+	}
+    },
     "VContenerTest" : {
 	"<type>" : "contener",
 	"cnt-type" : "vertical",
@@ -108,7 +118,12 @@
 	{
 	    "name" : "pj", // for text screen ?
 	    "map-srite" : "head.png", // sdl map
-	    "map-char" : "@" // curses map
+	    "map-char" : "@", // curses map
+	    "canvas-ascii" : [
+		"   o   ",
+		"  /V\\  ",
+		"  / \\  "
+	    ]
 	}
     ]
 }

@@ -19,6 +19,7 @@
 #include <glib.h>
 #include "map.h"
 #include "widget-callback.h"
+
 static int t = -1;
 
 static int mapInit(YWidgetState *opac, Entity *entity, void *args)
