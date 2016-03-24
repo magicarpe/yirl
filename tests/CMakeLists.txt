@@ -9,12 +9,12 @@ add_executable(
 	${SOURCE}
 )
 
-if( WITH_CURSES)
+if( ${WITH_CURSES} )
   set (RENDER_LIBS ${RENDER_LIBS} wid-curses)
   add_definitions(-DWITH_CURSES=1)
 endif()
 
-if( WITH_SDL)
+if( ${WITH_SDL})
   set (RENDER_LIBS ${RENDER_LIBS} wid-sdl2)
   add_definitions(-DWITH_SDL=1)
 endif()
