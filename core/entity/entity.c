@@ -38,15 +38,6 @@ static STACK_CREATE(freedElems, int64);
 static BlockArray entitysArray;
 static int entitysArrayisInit;
 
-/**
- * Here some macros to mutualise the code of entity
- */
-#define RETURN_ERROR_BAD_TYPE(function, entity, returnValue) do {	\
-  DPRINT_INFO("%s: bad entity, this entity is of type %s\n",		\
-	      (function), yeTypeToString(yeType(entity)));		\
-  return (returnValue);							\
-  } while (0)
-
 #define YE_DECR_REF(entity) do {		\
     entity->refCount -= 1;		       	\
   } while (0)
@@ -687,24 +678,27 @@ void	yeSetFloat(Entity *entity, double value)
 
 const char *yeGetString(Entity *entity)
 {
-  if (!checkType(entity, YSTRING)) {
-    RETURN_ERROR_BAD_TYPE("getStringVal", entity, NULL);
+  if (unlikely(!entity)) {
+    DPRINT_ERR("entity is NULL");
+    return NULL;
   }
   return ((StringEntity *)entity)->value;
 }
 
 int	yeGetInt(Entity *entity)
 {
-  if (!checkType(entity, YINT)) {
-    RETURN_ERROR_BAD_TYPE("getIntVal", entity, -1);
+  if (unlikely(!entity)) {
+    DPRINT_ERR("entity is NULL");
+    return 0;
   }
   return YE_TO_INT(entity)->value;
 }
 
 void	*yeGetData(Entity *entity)
 {
-  if (!checkType(entity, YDATA)) {
-    RETURN_ERROR_BAD_TYPE("getDataVal", entity, NULL);
+  if (unlikely(!entity)) {
+    DPRINT_ERR("entity is NULL");
+    return NULL;
   }
   return YE_TO_DATA(entity)->value;
 }
@@ -712,16 +706,18 @@ void	*yeGetData(Entity *entity)
 
 const char	*yeGetFunction(Entity *entity)
 {
-  if (!checkType(entity, YFUNCTION)) {
-    RETURN_ERROR_BAD_TYPE("getFunctionVal", entity, NULL);
+  if (unlikely(!entity)) {
+    DPRINT_ERR("entity is NULL");
+    return NULL;
   }
   return YE_TO_FUNC(entity)->value;
 }
 
 double	yeGetFloat(Entity *entity)
 {
-  if (!checkType(entity, YFLOAT)) {
-    RETURN_ERROR_BAD_TYPE("yeGetFloat", entity, -1);
+  if (unlikely(!entity)) {
+    DPRINT_ERR("entity is NULL");
+    return 0;
   }
   return ((FloatEntity *)entity)->value;
 }
@@ -886,5 +882,3 @@ int yeRenamePtrStr(Entity *array, Entity *ptr, const char *str)
 #undef YE_DESTROY_ENTITY
   
 #undef YE_ALLOC_ENTITY
-
-#undef RETURN_ERROR_BAD_TYPE
