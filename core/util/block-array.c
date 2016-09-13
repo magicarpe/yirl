@@ -102,7 +102,8 @@ inline void yBlockArrayFree(BlockArray *ba)
 {
   if (ba->flag & YBLOCK_ARRAY_NUMA)
     numa_free(ba->elems, NUMA_SIZE);
-  g_free(ba->elems);
+  else
+    g_free(ba->elems);
   g_free(ba->blocks);
   ba->nbBlock = 0;
   ba->size = 0;
