@@ -44,7 +44,7 @@ static BlockArray entitysArray;
 #define YE_DESTROY_ENTITY(entity, type) do {				\
     YE_DECR_REF(entity);						\
     if (entity->refCount < 1) {						\
-      size_t unset =							\
+      int64_t unset =							\
 	(size_t)(((union FatEntity *)entity)				\
 		 - yBlockArrayGetPtr(&entitysArray, 0, union FatEntity));\
       yBlockArrayUnset(&entitysArray, unset);				\
@@ -175,6 +175,8 @@ static Entity *yeGetByIdxFastWithEnd(Entity *entity, const char *name, int end)
 {
 
   Y_BLOCK_ARRAY_FOREACH_PTR(YE_TO_ARRAY(entity)->values, tmp, it, ArrayEntry) {
+    if (unlikely(!tmp || !tmp->name))
+      continue;
     if (!strncmp(tmp->name, name, end))
       return tmp->entity;
   }
@@ -187,7 +189,7 @@ Entity *yeGetByStrFast(Entity *entity, const char *name)
     return NULL;
 
   Y_BLOCK_ARRAY_FOREACH_PTR(YE_TO_ARRAY(entity)->values, tmp, it, ArrayEntry) {
-    if (!tmp || !tmp->name)
+    if (unlikely(!tmp || !tmp->name))
       continue;
     if (yuiStrEqual(tmp->name, name))
       return tmp->entity;
@@ -216,7 +218,7 @@ Entity *yeGetByStr(Entity *entity, const char *name)
 {
   int	i;
 
-  if (unlikely(!entity)) {
+  if (unlikely(!entity || !name)) {
     DPRINT_INFO("can not find entity for %s\n", name);
     return NULL;
   }
@@ -363,9 +365,7 @@ static void yeRemoveFather(Entity *entity, Entity *father)
 
 static void destroyChildsNoFree(Entity *entity)
 {
-  for (int i = 0, end = yeLen(entity); i < end; ++i) {
-    ArrayEntry *ae = yeGetArrayEntryByIdx(entity, i);
-
+  Y_BLOCK_ARRAY_FOREACH_PTR(YE_TO_ARRAY(entity)->values, ae, i, ArrayEntry) {
     yeRemoveFather(ae->entity, entity);
     arrayEntryDestroy(ae);
   }
