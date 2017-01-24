@@ -17,7 +17,6 @@
 
 #include <stdlib.h>
 #include <glib.h>
-#include <libtcc.h>
 
 #include "tcc-script.h"
 #include "debug.h"
@@ -47,6 +46,9 @@ static int tccInit(void *sm, void *args)
   tcc_add_sysinclude_path(l, YIRL_INCLUDE_PATH "/widget");
   tcc_add_sysinclude_path(l, YIRL_INCLUDE_PATH "/core");
   tcc_set_lib_path(l, TCC_LIB_PATH);
+  #ifdef TCC_OUTPUT_MEMORY
+  tcc_set_output_type(GET_TCC_S(sm), TCC_OUTPUT_MEMORY);
+  #endif
   return 0;
 }
 
@@ -58,6 +60,16 @@ static int tccLoadFile(void *sm, const char *filename)
     return ret;
   return tcc_relocate(GET_TCC_S(sm), TCC_RELOCATE_AUTO);
 }
+
+static int tccLoadString(void *sm, const char *str)
+{
+  int ret = tcc_compile_string(GET_TCC_S(sm), str);
+
+  if (ret < 0)
+    return ret;
+  return tcc_relocate(GET_TCC_S(sm), TCC_RELOCATE_AUTO);
+}
+
 
 static int tccRegistreFunc(void *sm, const char *name, void *arg)
 {
@@ -120,6 +132,7 @@ static void *tccAllocator(void)
   ret->ops.init = tccInit;
   ret->ops.destroy = tccDestroy;
   ret->ops.loadFile = tccLoadFile;
+  ret->ops.loadString = tccLoadString;
   ret->ops.call = tccCall;
   ret->ops.fastCall = tccFCall;
   ret->ops.getFastPath = tccGetFastCall;

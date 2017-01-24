@@ -18,7 +18,7 @@
 #ifndef _YIRL_TCC_SCRIPT_H_
 #define _YIRL_TCC_SCRIPT_H_
 
-#include <libtcc.h>
+#include "libtcc.h"
 #include "script.h"
 
 typedef struct {
