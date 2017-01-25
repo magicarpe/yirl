@@ -24,6 +24,7 @@
 typedef struct {
   YScriptOps ops;
   TCCState *l;
+  int needRealloc;
 } YTccScript;
 
 

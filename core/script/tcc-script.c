@@ -31,6 +31,9 @@ static int t = -1;
 
 #define GET_OPS(sm) (((YTccScript *)(sm))->ops)
 #define GET_TCC_S(sm) (((YTccScript *)(sm))->l)
+#define SET_REALLOC_NEEDED(sm) (((YTccScript *)(sm))->needRealloc = 1)
+#define UNSET_REALLOC_NEEDED(sm) (((YTccScript *)(sm))->needRealloc = 0)
+#define NEED_REALLOC(sm) (((YTccScript *)(sm))->needRealloc)
 
 static int tccInit(void *sm, void *args)
 {
@@ -56,18 +59,19 @@ static int tccLoadFile(void *sm, const char *filename)
 {
   int ret = tcc_add_c_file(GET_TCC_S(sm), filename);
 
-  if (ret < 0)
-    return ret;
-  return tcc_relocate(GET_TCC_S(sm), TCC_RELOCATE_AUTO);
+  SET_REALLOC_NEEDED(sm);
+  return ret;
 }
 
 static int tccLoadString(void *sm, const char *str)
 {
-  int ret = tcc_compile_string(GET_TCC_S(sm), str);
+  if (tcc_compile_string(GET_TCC_S(sm), str) < 0) {
+    DPRINT_ERR("failt to compille");
+    return -1;
+  }
 
-  if (ret < 0)
-    return ret;
-  return tcc_relocate(GET_TCC_S(sm), TCC_RELOCATE_AUTO);
+  SET_REALLOC_NEEDED(sm);
+  return 0;
 }
 
 
@@ -86,6 +90,13 @@ static void *tccGetFastCall(void *scriptManager, const char *name)
     return NULL;
   }
 
+  if (NEED_REALLOC(scriptManager)) {
+    if (tcc_relocate(GET_TCC_S(scriptManager), TCC_RELOCATE_AUTO) < 0) {
+      DPRINT_ERR("reallocation fail");
+      return NULL;
+    }
+    UNSET_REALLOC_NEEDED(scriptManager);
+  }
   return tcc_get_symbol(tcc_s, name);
 }
 
