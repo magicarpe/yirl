@@ -21,7 +21,7 @@ message("TCC_INTERNAL_LIB_PATH: " ${TCC_INTERNAL_LIB_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(GLIB2 REQUIRED)
- 
+
 add_definitions( -DYIRL_INCLUDE_PATH="${CMAKE_SOURCE_DIR}/include/" )
 
 option(WITH_SDL "use SDL driver" ON)
