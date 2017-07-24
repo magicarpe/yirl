@@ -41,6 +41,7 @@ typedef enum {
 
 typedef enum {
   YJSON = 0,
+  YRAW_FILE,
   END_YFILETYPE
 } YFileType;
 
@@ -117,7 +118,7 @@ Entity *ygLoadMod(const char *path);
 Entity *ygGetMod(const char *path);
 Entity *ygGetFuncExt(const char *func);
 
-int ygLoadFile(Entity *mod, void *manager, const char *path);
+int ygLoadScript(Entity *mod, void *manager, const char *path);
 
 void *ygGetManager(const char *name);
 

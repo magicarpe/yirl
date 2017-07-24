@@ -19,9 +19,14 @@
 #include "ybytecode.h"
 #include "ybytecode-script.h"
 #include "entity.h"
+#include "rawfile-desc.h"
+#include "description.h"
+#include "game.h"
 
 static int t = -1;
 static void *manager;
+
+Entity *functions;
 
 struct YBytecodeScript {
   YScriptOps ops;
@@ -116,6 +121,16 @@ static int ybytecodeDestroy(void *sm)
   return 0;
 }
 
+static int loadFile(void *opac, const char *fileName)
+{
+  Entity *str = ygFileToEnt(YRAW_FILE, fileName, NULL);
+
+  (void)opac;
+  (void)str;
+  (void)fileName;
+  return -1;
+}
+
 static void *ybytecodeAllocator(void)
 {
   struct YBytecodeScript *ybRet = g_new0(struct YBytecodeScript, 1);
@@ -126,6 +141,7 @@ static void *ybytecodeAllocator(void)
   ybRet->map = yeCreateArray(NULL, NULL);
   ret->call = ybytecodeCall;
   ret->getFastPath = ybytecodeGetFastPath;
+  ret->loadFile = loadFile;
   ret->fastCall = ybytecodeFastCall;
   ret->registreFunc = ybytecodeRegistreFunc;
   ret->destroy = ybytecodeDestroy;

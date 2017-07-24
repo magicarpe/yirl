@@ -17,7 +17,6 @@
 
 /*
  * This file contain the entity API.
- * All there's functions are made to be use in lua too
  */
 
 #ifndef	_YIRL_ENTITY_H
@@ -102,9 +101,6 @@ typedef enum {
 } YDataFlag;
 
 
-/**
- * @father is the entity contening this one (a struct or an array)
- */
 #define	ENTITY_HEADER				\
   unsigned int refCount;			\
   EntityType type;				\
@@ -324,10 +320,10 @@ Entity *yeExpandArray(Entity *entity, unsigned int size);
 
 /**
  * Add @toPush to @array>
- * @array:	the entity where we will add a new entity
- * @toPush:	the entity to add
- * @name:	the name
- * @return 0 or -1
+ * @param	array the entity where we will add a new entity
+ * @param	toPush the entity to add
+ * @param	name the name
+ * @return	0 or -1
  */
 int yePushBack(Entity *array, Entity *toPush, const char *name);
 int yePushBackExt(Entity *entity, Entity *toPush,
@@ -339,8 +335,8 @@ int yePushBackExt(Entity *entity, Entity *toPush,
 int yPushAt(Entity *array, Entity *toPush, int idx);
 
 /**
- * @array:	the array
- * @return the entity that is erased from the entity @array
+ * @param	array the array
+ * @return	the entity that is erased from the entity @array
  */
 Entity *yePopBack(Entity *array);
 
@@ -426,11 +422,12 @@ void yeDestroyData(Entity *entity) ;
 
 void yeClearArray(Entity *entity);
 
+#define yeIncrementIntDirect(entity) (((IntEntity *)entity)->value += 1)
 
 #define yeSetIntDirect(entity, value_) (((IntEntity *)entity)->value = (value_))
 
 /**
- * @parap entity
+ * @param entity
  * @param value
  * @return -1 if entity is not og type YINT, <value> otherwise
  */
@@ -440,7 +437,7 @@ void	yeSetInt(Entity *entity, int value);
 	(((FloatEntity *)entity)->value = (value_))
 
 /**
- * @parap entity
+ * @param entity
  * @param value
  * @return -1 if entity is not og type YFLOAT, <value> otherwise
  */

@@ -40,6 +40,7 @@ void testSetGeneric(void);
 
 void ysciptAdd(void);
 void yscriptLoop(void);
+void yscriptBenchLoop(void);
 void ysciptAddFunction(void);
 void ybytecodeScript(void);
 void ybytecodeAddFunction(void);

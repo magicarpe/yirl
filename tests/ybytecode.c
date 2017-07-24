@@ -30,6 +30,33 @@ void ysciptAdd(void)
   yeEnd();
 }
 
+void yscriptBenchLoop(void)
+{
+  yeInitMem();
+  Entity *args = yeCreateArrayExt(NULL, NULL,
+				  YBLOCK_ARRAY_NOINIT |
+				  YBLOCK_ARRAY_NOMIDFREE);
+  Entity *tmp;
+
+  // this is a simple for(int i = 0; i < 500 000; ++i)
+  int64_t test1[] = {0,
+		     'i', 0, //stack[0] = 2 // 2
+		     'j', 7, // jmp to loop comparaison // 4
+		     YB_INCR, 0, // 6
+		     // if stack 0 is iferior to stack[2], goto 5
+		     YB_INF_COMP_NBR, 0, 50000000, 5,
+		     'i', 2, // stack[1] = 2
+		     '*', 0, 1, 0, // mult stack[0] by 2
+		     'E', 0 // return 2nd elem
+  };
+
+  tmp = ybytecode_exec(args, test1);
+  g_assert(yeGetIntDirect(tmp) == (50000000 * 2));
+  yeDestroy(tmp);
+  yeDestroy(args);
+  yeEnd();
+}
+
 void yscriptLoop(void)
 {
   yeInitMem();
@@ -42,9 +69,9 @@ void yscriptLoop(void)
   int64_t test1[] = {0,
 		     'i', 0, //stack 1 - 2
 		     'i', 1, //stack 0 - 4
-		     'i', 50000000, // 6
+		     'i', 5000, // 6
 		     'j', 13, // jmp to loop - 8
-		     '+', 0, 1, 0, // 12
+		     '+', 0, 1, 0,
 		     // if stack 0 is iferior to stack 2, goto 9
 		     '<', 0, 2, 9,
 		     'i', 2, // stack 2 in 3
@@ -53,7 +80,7 @@ void yscriptLoop(void)
   };
 
   tmp = ybytecode_exec(args, test1);
-  g_assert(yeGetIntDirect(tmp) == (50000000 * 2));
+  g_assert(yeGetIntDirect(tmp) == (5000 * 2));
   yeDestroy(tmp);
   yeDestroy(args);
   yeEnd();
