@@ -14,8 +14,8 @@ TESTS_OBJ=$(call c_to_o_dir,$(TESTS_DIR),$(TESTS_SRC))
 
 $(TESTS_OBJ): CFLAGS += $(TESTS_CFLAGS)
 
-build-tests: $(TESTS_OBJ) build-dynamic-lib
-	$(CC)  -o  $(TESTS_NAME) $(TESTS_OBJ) $(LDFLAGS) -l$(NAME)
+build-tests: $(TESTS_OBJ) $(YIRL_LINKING)
+	$(CC)  -o  $(TESTS_NAME) $(TESTS_OBJ) $(LIBNAME).a $(LDFLAGS) -l$(NAME)
 
 clean-tests:
 	rm -rvf $(TESTS_OBJ)

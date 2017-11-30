@@ -43,9 +43,11 @@ typedef unsigned long long uint64_t;
 
 #if   __SIZEOF_POINTER__ == 4
 typedef int32_t int_ptr_t;
+#define PRIiptr	"%d"
 #define ONE64      1LLU
 
 #elif __SIZEOF_POINTER__ == 8
+#define PRIiptr	"%li"
 typedef int64_t int_ptr_t;
 #define ONE64      1LU
 

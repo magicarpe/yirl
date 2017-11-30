@@ -324,6 +324,7 @@ int    ysdl2Init(void)
   IMG_Quit();
  ttf_fail:
   SDL_Quit();
+  printf("kaboum\n");
   return -1;
 }
 
@@ -418,7 +419,9 @@ void sdlResize(YWidgetState *wid, int renderType)
 
 void sdlWidInit(YWidgetState *wid, int t)
 {
+  printf("will resize\n");
   sdlResize(wid, t);
+  printf("xx dead\n");
 }
 
 void sdlWidDestroy(YWidgetState *wid, int t)
