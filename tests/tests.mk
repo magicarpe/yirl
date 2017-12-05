@@ -12,7 +12,7 @@ TESTS_CFLAGS += -DTESTS_PATH=\"$(TESTS_DIR)\"
 
 TESTS_OBJ=$(call c_to_o_dir,$(TESTS_DIR),$(TESTS_SRC))
 
-$(TESTS_OBJ): CFLAGS += $(TESTS_CFLAGS)
+$(TESTS_OBJ): CFLAGS += $(TESTS_CFLAGS) -Wno-pointer-to-int-cast
 
 build-tests: $(TESTS_OBJ) $(YIRL_LINKING)
 	$(CC)  -o  $(TESTS_NAME) $(TESTS_OBJ) $(LIBNAME).a $(LDFLAGS) -l$(NAME)
