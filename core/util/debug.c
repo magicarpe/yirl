@@ -100,7 +100,8 @@ void	debug_print_info(FILE* fd, const char* mode)
   fprintf(fd, "[%.7s]", mode);
 }
 
-void	debug_print_(char const* mode, char const* format, va_list vl) {
+void	debug_print_(char const* mode, char const* format, va_list vl)
+{
   debug_print_info(log_confs[INFO].file, mode);
   if (format == NULL)
     fprintf(log_confs[INFO].file, "Unknow Error");    

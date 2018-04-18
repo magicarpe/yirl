@@ -424,6 +424,8 @@ Entity *ygLoadMod(const char *path)
   Entity *initScripts;
   Entity *name;
 
+  printf("heja %s\n", path);
+  fflush(stdout);
   tmp = g_strconcat(path, "/start.json", NULL);
   if (!tmp) {
     DPRINT_ERR("cannot allocated path(like something went really wrong)");
@@ -432,7 +434,8 @@ Entity *ygLoadMod(const char *path)
   mod = ydFromFile(jsonManager, tmp, NULL);
   if (!mod)
     goto failure;
-
+  printf("mod %p\n", mod);
+  fflush(stdout);
   name = yeGet(mod, "name");
   if (!name) {
     DPRINT_ERR("name not found in %s\n", tmp);
@@ -481,8 +484,14 @@ Entity *ygLoadMod(const char *path)
 
       yeRenamePtrStr(mod, tmpFile, yeGetString(as));
     } else if (yuiStrEqual0(yeGetString(tmpType), "module")) {
+      printf("mod load\n");
+      fflush(stdout);
       if (!ygLoadMod(fileStr)) {
+              printf("ca a peter\n");
+      fflush(stdout);
 	DPRINT_ERR("fail to load module: %s");
+                printf("ca a peter2\n");
+      fflush(stdout);
       fail_preload:
 	g_free(fileStr);
 	goto failure;
@@ -533,8 +542,12 @@ Entity *ygLoadMod(const char *path)
 
   goto exit;
  failure:
+   printf("mod fail %p\n", mod);
+  fflush(stdout);
   yeRemoveChild(modList, mod);
  exit:
+    printf("mod fail 2 %p\n", tmp);
+  fflush(stdout);
   g_free(tmp);
   return mod;
 }

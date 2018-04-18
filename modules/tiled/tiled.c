@@ -192,8 +192,10 @@ void *fileToCanvas(int nbArg, void **args)
 
 void *init_tiled(int nbArg, void **args)
 {
+  printf("hi\n");
   Entity *t = YE_TO_ENTITY(args[0]);
 
+  printf("hi\n");
   yeCreateFunction("setAssetPath", ygGetManager("tcc"), t, "setAssetPath");
   yeCreateFunction("deinit", ygGetManager("tcc"), t, "deinit");
   yeCreateFunction("fileToCanvas", ygGetManager("tcc"), t, "fileToCanvas");
